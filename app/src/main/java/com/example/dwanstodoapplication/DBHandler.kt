@@ -14,7 +14,7 @@ class DBHandler (context: Context?, cursorFactory: SQLiteDatabase.CursorFactory?
        // define create statement todo table
         val query = "CREATE TABLE " + TABLE_TODO_LIST + "(" +
                 COLUMN_TODO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_TODO_ISCHECKED + " TEXT " +
+                COLUMN_TODO_ISCHECKED + " TEXT, " +
                 COLUMN_TODO_NAME + " TEXT);";
 
         //execute statement
@@ -60,6 +60,41 @@ class DBHandler (context: Context?, cursorFactory: SQLiteDatabase.CursorFactory?
 
         //close
         db.close()
+    }
+
+    /**
+     * This method gets called when the Main Activity is created and when
+     * the add and delete buttons get clicked
+     * @return MutableList of Todos that contains all of the data
+     * in the todo table
+     */
+    val todos: MutableList<ToDo>
+    get(){
+        //get reference to todoapp database
+        val db = writableDatabase
+
+        //select statement
+        val query = "SELECT * FROM " + TABLE_TODO_LIST
+
+        //execute and store in cursor
+        val c = db.rawQuery(query, null)
+
+        //create Mutable list of todos that will be returned
+        val list: MutableList<ToDo> = ArrayList()
+
+        //loop through rows in cursor
+        while (c.moveToNext()){
+            //create Mutable ToDo using the data in the current
+            //row in the cursor
+            val todo: ToDo = ToDo(c.getInt(c.getColumnIndex("_id")),
+            c.getString(c.getColumnIndex("name")),
+            c.getString(c.getColumnIndex("is_checked")).toBoolean());
+            list.add(todo)
+        }
+        db.close()
+
+        return list
+
     }
 
     companion object{
