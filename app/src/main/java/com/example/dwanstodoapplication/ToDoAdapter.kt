@@ -85,4 +85,13 @@ class ToDoAdapter(
         dbHandler?.addTodo(name)
         notifyDataSetChanged()
     }
+
+    fun deleteTodos(dbHandler: DBHandler){
+        todos.forEach {
+            if(it.ischecked){
+                dbHandler?.deleteToDo(it.id)
+            }
+        }
+        notifyDataSetChanged()
+    }
 }

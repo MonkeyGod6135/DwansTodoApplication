@@ -62,6 +62,21 @@ class DBHandler (context: Context?, cursorFactory: SQLiteDatabase.CursorFactory?
         db.close()
     }
 
+    fun deleteToDo(id: Int){
+        //get reference to todoapp database
+        val db = writableDatabase
+
+        //define statement
+        val query = "DELETE FROM " + TABLE_TODO_LIST + " WHERE " +
+                COLUMN_TODO_ID + " = " + id
+
+        //execute delete statement
+        db.execSQL(query)
+
+        //close reference
+        db.close()
+    }
+
     /**
      * This method gets called when the Main Activity is created and when
      * the add and delete buttons get clicked
